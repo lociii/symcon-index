@@ -97,11 +97,10 @@
                         </div>
                         <div class="col-md-8">
                             {% for module in item.module_set.all %}
-                                <p>
-                                    <a href="{% url "symcon_library_module" library_id=module.library.uuid|lower module_id=module.uuid|lower %}">
-                                        {{ module.name }}
-                                    </a>
-                                </p>
+                                <a href="{% url "symcon_library_module" library_id=module.library.uuid|lower module_id=module.uuid|lower %}">
+                                    {{ module.name }}
+                                </a>
+                                <br>
                             {% endfor %}
                         </div>
                     </div>

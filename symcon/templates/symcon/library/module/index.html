@@ -22,7 +22,15 @@
                 {{ item.readme_html|safe }}
             {% else %}
                 <div class="alert alert-warning">
-                    {% trans "No readme found" %}
+                    <p>
+                        {% trans "No readme found" %}
+                    </p>
+                    {% if item.library.readme_html %}
+                        <p>
+                            {% trans "Check out the library readme, maybe you get what you're looking for there:" %}
+                            <a href="{% url "symcon_library" library_id=item.library.uuid %}">{% trans "Library" %}</a>
+                        </p>
+                    {% endif %}
                 </div>
             {% endif %}
         </div>
