@@ -20,7 +20,7 @@
             {% include "symcon/library/module/_summary.html" with show_library_details=1 %}
         {% empty %}
             <div class="alert alert-info">
-                No results
+                {% trans "No results" %}
             </div>
         {% endfor %}
         </div>
@@ -34,6 +34,9 @@
                     {% trans "Contact information can be found on the module and library detail pages." %}
                 </p>
             </div>
+            <p>
+                {% blocktrans with modules=module_count libraries=library_count %}Listing a total of {{ modules }} modules in {{ libraries }} libraries{% endblocktrans %}
+            </p>
         </div>
     </div>
 

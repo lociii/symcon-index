@@ -24,6 +24,12 @@ class IndexView(ListView):
 
         return queryset
 
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx.update(dict(library_count=models.Library.objects.all().count(),
+                        module_count=models.Module.objects.all().count()))
+        return ctx
+
 
 class LibraryModuleView(DetailView):
     model = models.Module
@@ -65,7 +71,7 @@ class LibrarySubmitView(FormView):
         matches = re.match(r'https://github.com/([^/]+)/([^/]+)/?', url)
         if not matches:
             messages.error(self.request, _('Could not parse GitHub URL'))
-            return super(LibrarySubmitView, self).form_valid(form)
+            return super().form_valid(form)
 
         user, name = matches.groups()
         try:
@@ -76,5 +82,5 @@ class LibrarySubmitView(FormView):
         except Exception as e:
             messages.error(self.request, str(e))
 
-        return super(LibrarySubmitView, self).form_valid(form)
+        return super().form_valid(form)
 
