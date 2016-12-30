@@ -18,13 +18,13 @@
                 <hr>
             {% endif %}
 
-            {% for module in item.module_set.all %}
-                {% include "symcon/library/module/_summary.html" with item=module %}
-            {% empty %}
+            {% if item.readme_html %}
+                {{ item.readme_html|safe }}
+            {% else %}
                 <div class="alert alert-warning">
-                    {% trans "This library does not contain any modules" %}
+                    {% trans "No readme found" %}
                 </div>
-            {% endfor %}
+            {% endif %}
         </div>
         <div class="col-md-4">
             {% include "symcon/_owner_info.html" with repository=item.library.repository %}
@@ -90,6 +90,22 @@
                         </div>
                     </li>
                 {% endif %}
+                <li>
+                    <div class="row">
+                        <div class="col-md-4">
+                            {% trans "Modules" %}
+                        </div>
+                        <div class="col-md-8">
+                            {% for module in item.module_set.all %}
+                                <p>
+                                    <a href="{% url "symcon_library_module" library_id=module.library.uuid|lower module_id=module.uuid|lower %}">
+                                        {{ module.name }}
+                                    </a>
+                                </p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </li>
             </ul>
         </div>
     </div>

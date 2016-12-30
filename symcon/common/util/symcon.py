@@ -23,6 +23,7 @@ class SymconLibrary(object):
         self.version = ''
         self.build = None
         self.date = None
+        self.readme = ''
 
     def validate(self):
         if not self.author:
@@ -49,14 +50,14 @@ class SymconModule(object):
     def add_alias(self, name):
         self.aliases.append(name)
 
-    def add_parent_requirement(self, name):
-        self.parent_requirements.append(name)
+    def add_parent_requirement(self, uuid):
+        self.parent_requirements.append(uuid)
 
-    def add_child_requirement(self, name):
-        self.child_requirements.append(name)
+    def add_child_requirement(self, uuid):
+        self.child_requirements.append(uuid)
 
-    def add_implemented_requiremen(self, name):
-        self.implemented_requiremens.append(name)
+    def add_implemented_requirement(self, uuid):
+        self.implemented_requiremens.append(uuid)
 
     def validate(self):
         if not self.name:
@@ -98,41 +99,48 @@ class SymconRepository(object):
         except GithubException:
             raise SymconException('failed to get repository root contents')
 
+        definition = None
+        readme = None
+
         # handle repo contents
         for item in contents:
             if item.type == 'dir':
                 self._check_subdirectory(repo, item.path)
-            elif item.type == 'file' and item.path == 'library.json':
-                self._handle_library_json(item.decoded_content)
+            elif item.type == 'file' and item.path.lower() == 'library.json':
+                definition = item.decoded_content.decode('UTF-8')
+            elif item.type == 'file' and item.path.lower() == 'readme.md':
+                readme = item.decoded_content.decode('UTF-8')
 
-    def _handle_library_json(self, json_string):
-        try:
-            definition = json.loads(json_string.decode('UTF-8'))
-        except:
-            raise SymconException('failed to parse library definition')
+        if definition:
+            try:
+                definition = json.loads(definition)
+            except:
+                raise SymconException('failed to parse library definition')
 
-        if 'id' not in definition:
-            raise SymconException('library definition has no id')
+            if 'id' not in definition:
+                raise SymconException('library definition has no id')
 
-        library = SymconLibrary(uuid=definition['id'])
-        if 'author' in definition:
-            library.author = definition['author']
-        if 'name' in definition:
-            library.name = definition['name']
-        if 'title' in definition:
-            library.title = definition['title']
-        if 'description' in definition:
-            library.description = definition['description']
-        if 'url' in definition:
-            library.url = definition['url']
-        if 'version' in definition:
-            library.version = definition['version']
-        if 'build' in definition:
-            library.build = definition['build']
-        if 'date' in definition:
-            library.date = definition['date']
+            library = SymconLibrary(uuid=definition['id'])
+            if 'author' in definition:
+                library.author = definition['author']
+            if 'name' in definition:
+                library.name = definition['name']
+            if 'title' in definition:
+                library.title = definition['title']
+            if 'description' in definition:
+                library.description = definition['description']
+            if 'url' in definition:
+                library.url = definition['url']
+            if 'version' in definition:
+                library.version = definition['version']
+            if 'build' in definition:
+                library.build = definition['build']
+            if 'date' in definition:
+                library.date = definition['date']
+            if readme:
+                library.readme = readme
 
-        self._set_library(library=library)
+            self._set_library(library=library)
 
     def _check_subdirectory(self, repo, directory):
         try:
@@ -174,14 +182,14 @@ class SymconRepository(object):
                 for name in definition['aliases']:
                     module.add_alias(name)
             if 'parentRequirements' in definition:
-                for name in definition['parentRequirements']:
-                    module.add_parent_requirement(name)
+                for uuid in definition['parentRequirements']:
+                    module.add_parent_requirement(uuid)
             if 'childRequirements' in definition:
-                for name in definition['childRequirements']:
-                    module.add_child_requirement(name)
+                for uuid in definition['childRequirements']:
+                    module.add_child_requirement(uuid)
             if 'implemented' in definition:
-                for name in definition['implemented']:
-                    module.add_implemented_requiremen(name)
+                for uuid in definition['implemented']:
+                    module.add_implemented_requirement(uuid)
             if 'prefix' in definition:
                 module.prefix = definition['prefix']
             if readme:
@@ -212,9 +220,10 @@ class SymconRepository(object):
                 name=self.library.name, title=self.library.title,
                 description=self.library.description, author=self.library.author,
                 url=self.library.url, version=self.library.version, build=self.library.build,
-                date=self.library.build))
+                date=self.library.build, readme_markdown=self.library.readme))
 
         for symcon_module in self.modules:
+            print(symcon_module, symcon_module.name)
             module, created = models.Module.objects.update_or_create(
                 library=library, uuid=symcon_module.uuid, defaults=dict(
                     name=symcon_module.name, title=symcon_module.title,
@@ -228,16 +237,16 @@ class SymconRepository(object):
                     module=module, name=name, defaults=dict(deleted=False))
 
             module.moduleparentrequirement_set.all().update(deleted=True)
-            for name in symcon_module.parent_requirements:
+            for uuid in symcon_module.parent_requirements:
                 models.ModuleParentRequirement.objects.update_or_create(
-                    module=module, name=name, defaults=dict(deleted=False))
+                    module=module, uuid=uuid, defaults=dict(deleted=False))
 
             module.modulechildrequirement_set.all().update(deleted=True)
-            for name in symcon_module.child_requirements:
+            for uuid in symcon_module.child_requirements:
                 models.ModuleChildRequirement.objects.update_or_create(
-                    module=module, name=name, defaults=dict(deleted=False))
+                    module=module, uuid=uuid, defaults=dict(deleted=False))
 
             module.moduleimplementedrequirement_set.all().update(deleted=True)
-            for name in symcon_module.implemented_requiremens:
+            for uuid in symcon_module.implemented_requiremens:
                 models.ModuleImplementedRequirement.objects.update_or_create(
-                    module=module, name=name, defaults=dict(deleted=False))
+                    module=module, uuid=uuid, defaults=dict(deleted=False))

@@ -38,6 +38,12 @@ class Library(models.Model):
     version = models.CharField(max_length=50, verbose_name=_('Version'))
     build = models.IntegerField(verbose_name=_('Build'))
     date = models.IntegerField(verbose_name=_('Date'))
+    readme_markdown = models.TextField(verbose_name=_('Readme MarkDown'))
+    readme_html = models.TextField(verbose_name=_('Readme HTML'))
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.readme_html = markdown.markdown(self.readme_markdown, output_format='html5')
+        super().save(force_insert, force_update, using, update_fields)
 
     class Meta:
         verbose_name = _('Library')
@@ -69,7 +75,6 @@ class Module(models.Model):
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.readme_html = markdown.markdown(self.readme_markdown, output_format='html5')
-
         super().save(force_insert, force_update, using, update_fields)
 
     class Meta:
