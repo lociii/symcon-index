@@ -11,6 +11,7 @@ env = environ.Env(
     DEBUG=(bool, False),
     SECRET_KEY=(str, "addSecretKeyToEnvironment"),
     GITHUB_API_USER=(str, ''),
+    DJANGO_LOG_LEVEL=(str, 'DEBUG'),
     GITHUB_API_TOKEN=(str, ''),
 )
 environ.Env.read_env(env_file=os.path.join(BASE_DIR, '.env'))
@@ -141,7 +142,7 @@ AUTHENTICATION_BACKENDS = (
 
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': True,
+    'disable_existing_loggers': False,
     'formatters': {
         'standard': {
             'format': "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
@@ -149,40 +150,26 @@ LOGGING = {
         },
     },
     'handlers': {
-        'null': {
-            'level': 'DEBUG',
-            'class': 'logging.NullHandler',
-        },
-        'logfile': {
-            'level': 'DEBUG',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': BASE_DIR + '/logs/heroku.log',
-            'maxBytes': 50000,
-            'backupCount': 2,
-            'formatter': 'standard',
-        },
         'console': {
-            'level': 'INFO',
             'class': 'logging.StreamHandler',
-            'formatter': 'standard'
         },
     },
     'loggers': {
         'django': {
-            'handlers': ['console', 'logfile'],
-            'propagate': True,
-            'level': 'WARN',
+            'handlers': ['console'],
+            'level': env('DJANGO_LOG_LEVEL'),
+            'formatter': 'standard',
         },
         'django.db.backends': {
-            'handlers': ['console', 'logfile'],
-            'level': 'DEBUG',
+            'handlers': ['console'],
+            'level': env('DJANGO_LOG_LEVEL'),
             'propagate': False,
         },
         'heroku': {
-            'handlers': ['console', 'logfile'],
-            'level': 'DEBUG',
+            'handlers': ['console'],
+            'level': env('DJANGO_LOG_LEVEL'),
         },
-    }
+    },
 }
 
 SITE_ID = 1
