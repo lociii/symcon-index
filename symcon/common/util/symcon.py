@@ -62,7 +62,7 @@ class SymconModule(object):
     def validate(self):
         if not self.name:
             raise SymconException('module has no name')
-        if not self.type:
+        if self.type is None:
             raise SymconException('module has no type')
 
 
