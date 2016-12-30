@@ -150,7 +150,7 @@ class SymconRepository(object):
                     dir=directory.lower()):
                 readme = item.decoded_content.decode('UTF-8')
 
-        if definition and readme:
+        if definition:
             try:
                 definition = json.loads(definition)
             except:
