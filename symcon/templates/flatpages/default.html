@@ -1,0 +1,13 @@
+{% extends 'symcon/base.html' %}
+{% load i18n %}
+
+{% block content %}
+    <div class="row bottom-buffer">
+        <div class="col-md-12">
+            <h3>{{ flatpage.title }}</h3>
+            <p>
+                {{ flatpage.content }}
+            </p>
+        </div>
+    </div>
+{% endblock %}

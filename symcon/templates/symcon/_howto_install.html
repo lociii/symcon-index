@@ -1,0 +1,15 @@
+{% load i18n %}
+
+<div class="alert alert-info">
+    <p>
+        {% trans "Want to install and use that library?" %}
+    </p>
+    <p>
+        {% get_current_language as LANGUAGE_CODE %}
+        {% if LANGUAGE_CODE == 'de' %}
+            <a href="{% url "django.contrib.flatpages.views.flatpage" url="de/howto/install/" %}">{% trans "Learn more about libraries and modules in IP-Symcon" %}</a>
+        {% else %}
+            <a href="{% url "django.contrib.flatpages.views.flatpage" url="en/howto/install/" %}">{% trans "Learn more about libraries and modules in IP-Symcon" %}</a>
+        {% endif %}
+    </p>
+</div>

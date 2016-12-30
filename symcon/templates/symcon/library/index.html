@@ -1,0 +1,96 @@
+{% extends 'symcon/base.html' %}
+{% load i18n %}
+
+{% block content %}
+    <div class="row bottom-buffer">
+        <div class="col-md-8">
+            <h1>
+                {% if item.title %}
+                    {{ item.title }}
+                {% else %}
+                    {{ item.name }}
+                {% endif %}
+            </h1>
+            <hr>
+
+            {% if item.description %}
+                <p>{{ item.description }}</p>
+                <hr>
+            {% endif %}
+
+            {% for module in item.module_set.all %}
+                {% include "symcon/library/module/_summary.html" with item=module %}
+            {% empty %}
+                <div class="alert alert-warning">
+                    {% trans "This library does not contain any modules" %}
+                </div>
+            {% endfor %}
+        </div>
+        <div class="col-md-4">
+            {% include "symcon/_owner_info.html" with repository=item.library.repository %}
+            {% include "symcon/_howto_install.html" %}
+
+            <ul class="module-details">
+                {% if item.title %}
+                    <li>
+                        {{ item.name }}
+                    </li>
+                {% endif %}
+                {% if item.author %}
+                    <li>
+                        {% blocktrans with value=item.author %}Developed by <i>{{ value }}</i>{% endblocktrans %}
+                    </li>
+                {% endif %}
+                <li>
+                    {% blocktrans with value=item.repository.last_update|date:"SHORT_DATETIME_FORMAT" %}Last updated on {{ value }}{% endblocktrans %}
+                </li>
+                <li>
+                    <a href="{{ item.repository.get_url }}" target="_blank">{{ item.repository.get_url }}</a>
+                </li>
+                <li>
+                    <a href="{{ item.repository.get_issue_url }}" target="_blank">{% trans "Issues and proposals" %}</a>
+                </li>
+            </ul>
+
+            <h4>{% trans "Library" %}</h4>
+            <ul class="module-details">
+                {% if item.version %}
+                    <li>
+                        <div class="row">
+                            <div class="col-md-4">
+                                {% trans "Version" %}
+                            </div>
+                            <div class="col-md-8">
+                                {{ item.version }}
+                            </div>
+                        </div>
+                    </li>
+                {% endif %}
+                {% if item.build %}
+                    <li>
+                        <div class="row">
+                            <div class="col-md-4">
+                                {% trans "Build number" %}
+                            </div>
+                            <div class="col-md-8">
+                                {{ item.build }}
+                            </div>
+                        </div>
+                    </li>
+                {% endif %}
+                {% if item.date %}
+                    <li>
+                        <div class="row">
+                            <div class="col-md-4">
+                                {% trans "Date" %}
+                            </div>
+                            <div class="col-md-8">
+                                {{ item.date }}
+                            </div>
+                        </div>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}

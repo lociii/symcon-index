@@ -1,0 +1,39 @@
+.bottom-buffer {
+    padding-bottom: 20px !important;
+}
+
+ul.module-details {
+    list-style-type: none;
+    padding-left: 0;
+    margin-bottom: 45px;
+}
+
+ul.module-details > li {
+    padding: 5px 0;
+    border-bottom: 1px solid #ccc;
+}
+
+footer {
+    padding-top: 50px;
+    padding-bottom: 50px;
+    margin-top: 100px;
+    color: #99979c;
+    background-color: #2a2730;
+}
+
+footer ul.links {
+    padding-left: 0;
+    margin-bottom: 20px;
+}
+
+footer ul.links li {
+    display: inline-block;
+}
+
+footer ul.links li+li {
+    margin-left: 15px;
+}
+
+footer a {
+    color: #fff;
+}

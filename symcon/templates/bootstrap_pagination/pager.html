@@ -1,0 +1,10 @@
+<nav>
+    <ul class="pager">
+        <li class="{% if not page.has_previous %}disabled{% endif %}">
+            <a href="{{ previous_page_url|default:"#"|escape }}"><span aria-hidden="true">&larr;</span> {{ previous_label }}</a>
+        </li>
+        <li class="{% if not page.has_next %}disabled{% endif %}">
+            <a href="{{ next_page_url|default:"#"|escape }}">{{ next_label }} <span aria-hidden="true">&rarr;</span></a>
+        </li>
+    </ul>
+</nav>

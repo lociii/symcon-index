@@ -1,0 +1,35 @@
+{% load i18n %}
+
+<a href="{% url "symcon_library_module" library_id=item.library.uuid|lower module_id=item.uuid|lower %}">
+    <h3>
+        {% if item.title %}
+            {{ item.title }}
+        {% else %}
+            {{ item.name }}
+        {% endif %}
+    </h3>
+</a>
+
+{% if show_library_details %}
+    <p>
+        <small>
+            <a href="{% url "symcon_library" library_id=item.library.uuid|lower %}"><strong>{{ item.library.name }}</strong></a>{% if item.vendor or item.library.author %},{% endif %}
+            {% if item.vendor and item.library.author %}
+                {% blocktrans with vendor=item.vendor author=item.library.author %}published by <i>{{ vendor }} and developed by {{ author }}</i>{% endblocktrans %}<br>
+            {% elif item.vendor %}
+                {% blocktrans with value=item.vendor %}published by <i>{{ value }}</i>{% endblocktrans %}<br>
+            {% elif item.library.author %}
+                {% blocktrans with value=item.library.author %}developed by <i>{{ value }}</i>{% endblocktrans %}<br>
+            {% endif %}
+        </small>
+    </p>
+    {% if item.description %}
+        <p>
+            {{ item.description|linebreaksbr }}
+        </p>
+    {% endif %}
+    <p>
+        {% blocktrans with value=item.library.repository.last_update|date:"SHORT_DATETIME_FORMAT" %}Last updated on {{ value }}{% endblocktrans %}
+    </p>
+{% endif %}
+<hr>

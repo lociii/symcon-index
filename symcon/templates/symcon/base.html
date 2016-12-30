@@ -1,0 +1,98 @@
+{% load static %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>{% trans "Symcon module index" %}</title>
+
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link href="{% static "custom.css" %}" rel="stylesheet">
+        <script src="https://use.fontawesome.com/3ce10ce4d5.js"></script>
+    </head>
+
+    <body>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                            data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">{% trans "Toggle navigation" %}</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="{% url "symcon_index" %}">{% trans "Symcon module index" %}</a>
+                </div>
+
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="{% url "symcon_library_submit" %}">{% trans "Submit library" %}</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+
+        <div class="container">
+            {% if messages %}
+                <div class="row bottom-buffer">
+                    <div class="col-md-12">
+                        {% for message in messages %}
+                            <div id="messageframework" class="alert alert-block {% if 'debug' in message.tags or 'info' in message.tags %}alert-info{% elif 'success' in message.tags %}alert-success{% elif 'error' in message.tags %}alert-danger{% elif 'warning' in message.tags %}alert-warning{% endif %}">
+                                <strong>
+                                    {% if 'debug' in message.tags %}
+                                        {% trans "DEBUG" %}
+                                    {% elif 'info' in message.tags %}
+                                        {% trans "Info" %}
+                                    {% elif 'success' in message.tags %}
+                                        {% trans "Success" %}
+                                    {% elif 'error' in message.tags %}
+                                        {% trans "Error" %}
+                                    {% else %}
+                                        {% trans "Warning" %}
+                                    {% endif %}
+                                </strong>
+                                {% if 'safe' in message.tags %}
+                                    {{ message|safe }}
+                                {% else %}
+                                    {{ message }}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% block content %}{% endblock %}
+        </div>
+
+        <footer>
+            <div class="container">
+                <ul class="links">
+                    <li><a href="https://github.com/lociii/symcon-index">{% trans "GitHub" %}</a></li>
+                    {% get_current_language as LANGUAGE_CODE %}
+                    {% if LANGUAGE_CODE == 'de' %}
+                        <li><a href="{% url "django.contrib.flatpages.views.flatpage" url="de/imprint/" %}">{% trans "Imprint" %}</a></li>
+                    {% else %}
+                        <li><a href="{% url "django.contrib.flatpages.views.flatpage" url="en/imprint/" %}">{% trans "Imprint" %}</a></li>
+                    {% endif %}
+                </ul>
+                <p>
+                    {% trans "Made with love in Stuttgart/Germany" %}
+                <p>
+                <p>
+                    {% trans "The source code of this project is free and open source:" %}
+                    <a href="https://opensource.org/licenses/MIT">{% trans "MIT license" %}</a>
+                </p>
+            </div>
+        </footer>
+
+        <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script src="{% static "custom.js" %}"></script>
+    </body>
+</html>

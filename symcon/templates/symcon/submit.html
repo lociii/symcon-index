@@ -1,0 +1,39 @@
+{% extends 'symcon/base.html' %}
+{% load i18n %}
+
+{% block content %}
+    <div class="row bottom-buffer">
+        <div class="col-md-12">
+            <h3>{% trans "Submit a new library" %}</h3>
+            <p>
+                {% trans "To get your own library listed, just paste a link to the GitHub repository of the library." %}
+            </p>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <form method="post" class="library-submit">
+                        {% csrf_token %}
+                        <div class="form-group {% if form.repository_url.errors %}has-error{% endif %}">
+                            <label class="control-label" for="repository_url">{% trans "Repository URL" %}</label>
+                            <input type="url" class="form-control" id="repository_url" name="repository_url" placeholder="{% trans "e.g. https://github.com/lociii/locisymcon" %}">
+                            {% if form.repository_url.errors %}
+                                <span class="help-block">
+                                    {% for error in form.repository_url.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </span>
+                            {% endif %}
+                        </div>
+                        <button type="submit" class="btn btn-default">{% trans "Submit" %}</button>
+                        <p class="hidden">
+                            <br>
+                            <i class="fa fa-circle-o-notch fa-spin" style="font-size:24px"></i>
+                            &#160;
+                            {% trans "Processing your submission. This might take a few seconds..." %}
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

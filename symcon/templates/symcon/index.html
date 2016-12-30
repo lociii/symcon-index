@@ -1,0 +1,47 @@
+{% extends 'symcon/base.html' %}
+{% load i18n %}
+{% load bootstrap_pagination %}
+
+{% block content %}
+    <div class="row bottom-buffer">
+        <form action="{% url "symcon_index" %}" method="GET">
+            <div class="col-md-11">
+                <input class="form-control" name="search" placeholder="{% trans "Search term" %}">
+            </div>
+            <div class="col-md-1">
+                <button type="submit" class="btn btn-default">{% trans "Search" %}</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="row bottom-buffer">
+        <div class="col-md-9">
+        {% for item in data %}
+            {% include "symcon/library/module/_summary.html" with show_library_details=1 %}
+        {% empty %}
+            <div class="alert alert-info">
+                No results
+            </div>
+        {% endfor %}
+        </div>
+        <div class="col-md-3">
+            <div class="alert alert-info">
+                <p>
+                    {% trans "The information on this page is automatically extracted from GitHub." %}
+                    <br>
+                    {% trans "Please contact the repository owners about invalid/illegitimate content." %}
+                    <br>
+                    {% trans "Contact information can be found on the module and library detail pages." %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    {% if is_paginated %}
+        <div class="row bottom-buffer">
+            <div class="col-md-12">
+                {% bootstrap_pager page_obj url_view_name="symcon_index_page" centered=true %}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,12 @@
+{% load i18n %}
+
+<div class="alert alert-info">
+    <p>
+        {% trans "The information on this page is automatically extracted from GitHub." %}
+        <br>
+        {% trans "Please contact the repository owner about invalid/illegitimate content:" %}
+    </p>
+    <p>
+        <a href="{{ repository.get_owner_url }}" target="_blank">{% blocktrans with user=repository.user %}{{ user }} on GitHub{% endblocktrans %}</a>
+    </p>
+</div>
