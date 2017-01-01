@@ -1,0 +1,57 @@
+{
+  "name": "Symcon module index",
+  "description": "A library and module index for IP-Symcon.",
+  "keywords": [
+    "productivity",
+    "home automation",
+    "symcon",
+    "ipsymcon",
+    "ip-symcon",
+    "ips"
+  ],
+  "website": "https://symcon-index.herokuapp.com/",
+  "repository": "https://github.com/lociii/symcon-index",
+  "success_url": "/",
+  "env": {
+    "SECRET_KEY": {
+      "description": "A secret key for verifying the integrity of signed cookies.",
+      "required": true,
+      "generator": "secret"
+    },
+    "WEB_CONCURRENCY": {
+      "description": "The number of processes to run.",
+      "required": true,
+      "value": "2"
+    },
+    "GITHUB_API_USER": {
+      "description": "Username to query repository details from GitHub.",
+      "required": true,
+      "value": ""
+    },
+    "GITHUB_API_TOKEN": {
+      "description": "Personal access token of the GitHub user.",
+      "required": true,
+      "value": ""
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
+  "image": "heroku/python",
+  "addons": [
+    {
+      "plan": "heroku-postgresql",
+      "options": {
+        "version": "9.5"
+      }
+    }
+  ],
+  "buildpacks": [
+    {
+      "url": "https://github.com/clutter/heroku-buildpack-django-migrate"
+    }
+  ]
+}
