@@ -1,0 +1,293 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Library"
+msgstr "Bibliothek"
+
+msgid "Module"
+msgstr "Modul"
+
+msgid "Invalid GitHub URL"
+msgstr "Ungültige GitHub URL"
+
+msgid "User"
+msgstr "Benutzer"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Last update"
+msgstr "Letzte Aktualisierung"
+
+msgid "Repository"
+msgstr "Repository"
+
+msgid "Repositories"
+msgstr "Repositories"
+
+msgid "Identifier"
+msgstr "Bezeichner"
+
+msgid "Title"
+msgstr "Titel"
+
+msgid "Description"
+msgstr "Beschreibung"
+
+msgid "Author"
+msgstr "Autor"
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Version"
+msgstr "Version"
+
+msgid "Build"
+msgstr "Build"
+
+msgid "Date"
+msgstr "Datum"
+
+msgid "Readme MarkDown"
+msgstr "Dokumentation MarkDown"
+
+msgid "Readme HTML"
+msgstr "Dokumentation HTML"
+
+msgid "Libraries"
+msgstr "Bibliotheken"
+
+msgid "Core"
+msgstr "Kern"
+
+msgid "I/O"
+msgstr "I/O"
+
+msgid "Splitter"
+msgstr "Splitter"
+
+msgid "Device"
+msgstr "Gerät"
+
+msgid "Configurator"
+msgstr "Konfigurator"
+
+msgid "Type"
+msgstr "Typ"
+
+msgid "Vendor"
+msgstr "Herstellen"
+
+msgid "Prefix"
+msgstr "Präfix"
+
+msgid "Modules"
+msgstr "Module"
+
+msgid "Marked for deletion"
+msgstr "Vorgemerkt zur Löschung"
+
+msgid "Module alias"
+msgstr "Modul-Alias"
+
+msgid "Module aliases"
+msgstr "Modul-Aliase"
+
+msgid "Module parent requirement"
+msgstr "Modul-Voraussetzung (Eltern)"
+
+msgid "Module parent requirements"
+msgstr "Modul-Voraussetzungen (Eltern)"
+
+msgid "Module child requirement"
+msgstr "Modul-Voraussetzung (Kinder)"
+
+msgid "Module child requirements"
+msgstr "Modul-Voraussetzungen (Kinder)"
+
+msgid "Module implemented requirement"
+msgstr "Modul-Voraussetzung (Implementierung)"
+
+msgid "Module implemented requirements"
+msgstr "Modul-Voraussetzungen (Implementierung)"
+
+msgid "Want to install and use that library?"
+msgstr "Du möchtest diese Bibliothek installieren und nutzen?"
+
+msgid "Learn more about libraries and modules in IP-Symcon"
+msgstr "Lerne mehr über Bibliotheken und Module in IP-Symcon"
+
+msgid "The information on this page is automatically extracted from GitHub."
+msgstr ""
+"Die Informationen auf dieser Seite werden automatisch aus GitHub extrahiert."
+
+msgid "Please contact the repository owner about invalid/illegitimate content:"
+msgstr ""
+"Bitte kontaktiere den Besitzer des Repository bei ungültigem oder "
+"unrechtmäßigem Inhalt:"
+
+#, python-format
+msgid "%(user)s on GitHub"
+msgstr "%(user)s auf GitHub"
+
+msgid "Symcon module index"
+msgstr "Symcon Modul-Index"
+
+msgid "Toggle navigation"
+msgstr "Navigation ein-/ausblenden"
+
+msgid "Submit library"
+msgstr "Neue Bibliothek hinzufügen"
+
+msgid "DEBUG"
+msgstr "DEBUG"
+
+msgid "Info"
+msgstr "Information"
+
+msgid "Success"
+msgstr "Erfolg"
+
+msgid "Error"
+msgstr "Fehler"
+
+msgid "Warning"
+msgstr "Warnung"
+
+msgid "GitHub"
+msgstr "GitHub"
+
+msgid "Imprint"
+msgstr "Impressum"
+
+msgid "Made with love in Stuttgart/Germany"
+msgstr "Dieses Projekt wird mit viel Liebe in Stuttgart entwickelt"
+
+msgid "The source code of this project is free and open source:"
+msgstr "Der Quellcode dieses Projekts in frei verfügbar und Open Source:"
+
+msgid "MIT license"
+msgstr "MIT Lizenz"
+
+msgid "Search term"
+msgstr "Suchbegriff"
+
+msgid "Search"
+msgstr "Suchen"
+
+msgid "No results"
+msgstr "Die Suche brachte leider keine Ergebnisse"
+
+msgid ""
+"Please contact the repository owners about invalid/illegitimate content."
+msgstr ""
+"Bitte kontaktiere die jeweiligen Besitzer der Repositories bei ungültigem "
+"oder unrechtmäßigem Inhalt."
+
+msgid ""
+"Contact information can be found on the module and library detail pages."
+msgstr ""
+"Kontaktinformationen können auf den Modul- und Bibliothekdetailseiten "
+"gefunden werden."
+
+#, python-format
+msgid "Listing a total of %(modules)s modules in %(libraries)s libraries"
+msgstr ""
+"Der Index enthalt insgesamt %(modules)s Module und %(libraries)s Bibliotheken"
+
+msgid "No readme found"
+msgstr "Keine Dokumentation gefunden"
+
+#, python-format
+msgid "Developed by <i>%(value)s</i>"
+msgstr "Entwickelt von <i>%(value)s</i>"
+
+#, python-format
+msgid "Last updated on %(value)s"
+msgstr "Letzte Aktualisierung am %(value)s"
+
+msgid "Issues and proposals"
+msgstr "Fehler und Vorschläge"
+
+msgid "Build number"
+msgstr "Buildnummer"
+
+#, python-format
+msgid "published by <i>%(vendor)s</i> and developed by <i>%(author)s</i>"
+msgstr ""
+"veröffentlicht von <i>%(vendor)s</i> und entwickelt von <i>%(author)s</i>"
+
+#, python-format
+msgid "published by <i>%(value)s</i>"
+msgstr "veröffentlicht von <i>%(value)s</i>"
+
+#, python-format
+msgid "developed by <i>%(value)s</i>"
+msgstr "entwickelt von <i>%(value)s</i>"
+
+msgid ""
+"Check out the library readme, maybe you get what you're looking for there:"
+msgstr ""
+"Schaue in die Dokumentation der Bibliothek, vielleicht findest Du dort "
+"wonach Du suchst:"
+
+#, python-format
+msgid "Published by <i>%(value)s</i>"
+msgstr "Veröffentlicht von <i>%(value)s</i>"
+
+msgid "Aliases"
+msgstr "Aliase"
+
+msgid "Parent requirements"
+msgstr "Voraussetzungen (Eltern)"
+
+msgid "Child requirements"
+msgstr "Voraussetzungen (Kinder)"
+
+msgid "Implemented requirements"
+msgstr "Voraussetzungen (Implementierung)"
+
+msgid "Submit a new library"
+msgstr "Trage eine neue Bibliothek in den Index ein"
+
+msgid ""
+"To get your own library listed, just paste a link to the GitHub repository "
+"of the library."
+msgstr ""
+"Um Deine eigene Bibliothek im Index aufzuführen, musst Du nur einen Link zu "
+"Deinem GitHub-Repository hier einfügen."
+
+msgid "Repository URL"
+msgstr "Repository-URL"
+
+msgid "e.g. https://github.com/lociii/locisymcon"
+msgstr "z.B. https://github.com/lociii/locisymcon"
+
+msgid "Submit"
+msgstr "Eintragen"
+
+msgid "Processing your submission. This might take a few seconds..."
+msgstr "Deine Eintragung wird verarbeitet. Dies kann einige Sekunden dauern..."
+
+msgid "Could not parse GitHub URL"
+msgstr "Die GitHub URL konnte nicht verifiziert werden"
+
+msgid "Library added successfully"
+msgstr "Die Bibliothek wurde erfolgreich hinzugefügt"
