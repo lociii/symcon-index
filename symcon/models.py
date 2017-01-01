@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from model_utils.choices import Choices
 
 from symcon import querysets
+from symcon.common.util.markdown import MarkDownToHtml
 
 
 class Repository(models.Model):
@@ -20,6 +21,9 @@ class Repository(models.Model):
 
     def get_owner_url(self):
         return 'https://github.com/{user}'.format(user=self.user)
+
+    def get_raw_url(self, branch='master'):
+        return self.get_url() + '/raw/' + branch
 
     class Meta:
         verbose_name = _('Repository')
@@ -42,8 +46,12 @@ class Library(models.Model):
     readme_html = models.TextField(verbose_name=_('Readme HTML'))
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        self.readme_html = markdown.markdown(self.readme_markdown, output_format='html5')
+        self.convert_readme()
         super().save(force_insert, force_update, using, update_fields)
+
+    def convert_readme(self):
+        self.readme_html = MarkDownToHtml(
+            text=self.readme_markdown, repository=self.repository).transform()
 
     class Meta:
         verbose_name = _('Library')
@@ -74,8 +82,12 @@ class Module(models.Model):
     readme_html = models.TextField(verbose_name=_('Readme HTML'))
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        self.readme_html = markdown.markdown(self.readme_markdown, output_format='html5')
+        self.convert_readme()
         super().save(force_insert, force_update, using, update_fields)
+
+    def convert_readme(self):
+        self.readme_html = MarkDownToHtml(
+            text=self.readme_markdown, repository=self.library.repository).transform()
 
     class Meta:
         verbose_name = _('Module')
