@@ -210,7 +210,7 @@ msgstr ""
 #, python-format
 msgid "Listing a total of %(modules)s modules in %(libraries)s libraries"
 msgstr ""
-"Der Index enthalt insgesamt %(modules)s Module und %(libraries)s Bibliotheken"
+"Der Index enthält insgesamt %(modules)s Module und %(libraries)s Bibliotheken"
 
 msgid "No readme found"
 msgstr "Keine Dokumentation gefunden"
