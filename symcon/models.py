@@ -11,7 +11,7 @@ from symcon.common.util.markdown import MarkDownToHtml
 class Repository(models.Model):
     user = models.CharField(max_length=100, verbose_name=_('User'))
     name = models.CharField(max_length=100, verbose_name=_('Name'))
-    last_update = models.DateTimeField(verbose_name=_('Last update'))
+    last_update = models.DateTimeField(null=True, blank=True, verbose_name=_('Last update'))
 
     def get_url(self):
         return '{owner_url}/{name}'.format(owner_url=self.get_owner_url(), name=self.name)
@@ -34,16 +34,16 @@ class Repository(models.Model):
 class Library(models.Model):
     repository = models.ForeignKey(to=Repository, verbose_name=_('Repository'))
     uuid = models.UUIDField(verbose_name=_('Identifier'), unique=True)
-    name = models.CharField(max_length=200, verbose_name=_('Name'))
-    title = models.TextField(verbose_name=_('Title'))
-    description = models.TextField(verbose_name=_('Description'))
-    author = models.CharField(max_length=200, verbose_name=_('Author'))
-    url = models.URLField(verbose_name=_('URL'))
-    version = models.CharField(max_length=50, verbose_name=_('Version'))
-    build = models.IntegerField(verbose_name=_('Build'))
-    date = models.IntegerField(verbose_name=_('Date'))
-    readme_markdown = models.TextField(verbose_name=_('Readme MarkDown'))
-    readme_html = models.TextField(verbose_name=_('Readme HTML'))
+    name = models.CharField(max_length=200, blank=True, verbose_name=_('Name'))
+    title = models.TextField(blank=True, verbose_name=_('Title'))
+    description = models.TextField(blank=True, verbose_name=_('Description'))
+    author = models.CharField(max_length=200, blank=True, verbose_name=_('Author'))
+    url = models.URLField(blank=True, verbose_name=_('URL'))
+    version = models.CharField(max_length=50, blank=True, verbose_name=_('Version'))
+    build = models.IntegerField(null=True, blank=True, verbose_name=_('Build'))
+    date = models.IntegerField(null=True, blank=True, verbose_name=_('Date'))
+    readme_markdown = models.TextField(blank=True, verbose_name=_('Readme MarkDown'))
+    readme_html = models.TextField(blank=True, verbose_name=_('Readme HTML'))
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.convert_readme()
@@ -72,14 +72,14 @@ class Module(models.Model):
 
     library = models.ForeignKey(to=Library, verbose_name=_('Library'))
     uuid = models.UUIDField(verbose_name=_('Identifier'), unique=True)
-    name = models.CharField(max_length=200, verbose_name=_('Name'))
-    title = models.TextField(verbose_name=_('Title'))
-    description = models.TextField(verbose_name=_('Description'))
-    type = models.IntegerField(choices=TYPE_CHOICES, verbose_name=_('Type'))
-    vendor = models.CharField(max_length=200, verbose_name=_('Vendor'))
-    prefix = models.CharField(max_length=200, verbose_name=_('Prefix'))
-    readme_markdown = models.TextField(verbose_name=_('Readme MarkDown'))
-    readme_html = models.TextField(verbose_name=_('Readme HTML'))
+    name = models.CharField(max_length=200, blank=True, verbose_name=_('Name'))
+    title = models.TextField(blank=True, verbose_name=_('Title'))
+    description = models.TextField(blank=True, verbose_name=_('Description'))
+    type = models.IntegerField(choices=TYPE_CHOICES, null=True, blank=True, verbose_name=_('Type'))
+    vendor = models.CharField(max_length=200, blank=True, verbose_name=_('Vendor'))
+    prefix = models.CharField(max_length=200, blank=True, verbose_name=_('Prefix'))
+    readme_markdown = models.TextField(blank=True, verbose_name=_('Readme MarkDown'))
+    readme_html = models.TextField(blank=True, verbose_name=_('Readme HTML'))
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.convert_readme()

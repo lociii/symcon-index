@@ -3,6 +3,8 @@ import os
 import environ
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from datetime import timedelta
+
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 SITE_NAME = os.path.basename(PROJECT_ROOT)
 BASE_DIR = os.path.dirname(PROJECT_ROOT)
@@ -10,9 +12,10 @@ BASE_DIR = os.path.dirname(PROJECT_ROOT)
 env = environ.Env(
     DEBUG=(bool, False),
     SECRET_KEY=(str, "addSecretKeyToEnvironment"),
+    DJANGO_LOG_LEVEL=(str, 'WARNING'),
     GITHUB_API_USER=(str, ''),
-    DJANGO_LOG_LEVEL=(str, 'DEBUG'),
     GITHUB_API_TOKEN=(str, ''),
+    REDIS_URL=(str, 'redis://'),
 )
 environ.Env.read_env(env_file=os.path.join(BASE_DIR, '.env'))
 
@@ -42,6 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     'bootstrap_pagination',
+    'django_celery_results',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -141,6 +146,8 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
+LOGGING_DEFAULT_HANDLERS = ['console']
+LOGGING_LOG_LEVEL = env('DJANGO_LOG_LEVEL')
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -157,21 +164,42 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['console'],
-            'level': env('DJANGO_LOG_LEVEL'),
+            'handlers': LOGGING_DEFAULT_HANDLERS,
+            'level': LOGGING_LOG_LEVEL,
             'formatter': 'standard',
         },
         'django.db.backends': {
-            'handlers': ['console'],
-            'level': env('DJANGO_LOG_LEVEL'),
+            'handlers': LOGGING_DEFAULT_HANDLERS,
+            'level': LOGGING_LOG_LEVEL,
             'propagate': False,
         },
         'heroku': {
-            'handlers': ['console'],
-            'level': env('DJANGO_LOG_LEVEL'),
+            'handlers': LOGGING_DEFAULT_HANDLERS,
+            'level': LOGGING_LOG_LEVEL,
+        },
+        'celery': {
+            'handlers': LOGGING_DEFAULT_HANDLERS,
+            'level': LOGGING_LOG_LEVEL,
+            'propagate': False,
         },
     },
 }
+
+# CELERY
+CELERY_BROKER_URL = env('REDIS_URL')
+CELERYD_HIJACK_ROOT_LOGGER = False
+CELERY_QUEUE_HA_POLICY = 'all'
+CELERY_WORKER_DIRECT = False
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_RESULT_PERSISTENT = True
+CELERY_IGNORE_RESULT = True
+CELERY_TASK_RESULT_EXPIRES = timedelta(days=7)
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_TRACK_STARTED = True
+CELERY_SEND_EVENTS = False
+CELERY_SEND_TASK_SENT_EVENT = False
+CELERY_EVENT_QUEUE_TTL = 60
+# END CELERY
 
 SITE_ID = 1
 

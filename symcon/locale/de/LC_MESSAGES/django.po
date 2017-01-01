@@ -283,11 +283,8 @@ msgstr "z.B. https://github.com/lociii/locisymcon"
 msgid "Submit"
 msgstr "Eintragen"
 
-msgid "Processing your submission. This might take a few seconds..."
-msgstr "Deine Eintragung wird verarbeitet. Dies kann einige Sekunden dauern..."
-
 msgid "Could not parse GitHub URL"
 msgstr "Die GitHub URL konnte nicht verifiziert werden"
 
-msgid "Library added successfully"
-msgstr "Die Bibliothek wurde erfolgreich hinzugefügt"
+msgid "Thanks! Your submission will be processed soon"
+msgstr "Vielen Dank! Deine Eintragung wird gleich verarbeitet."

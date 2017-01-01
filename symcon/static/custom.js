@@ -5,7 +5,6 @@ $(document).ready(function() {
             e.preventDefault();
         } else {
             form.data('submitted', 'yes');
-            form.find('p.hidden').removeClass('hidden').addClass('show');
         }
 
         return this;

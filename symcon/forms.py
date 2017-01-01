@@ -5,6 +5,6 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class SubmitForm(forms.Form):
-    repository_url = forms.URLField(validators=[RegexValidator(
-        regex=r'https://github.com/[^/]+/[^/]+/?$', message=_('Invalid GitHub URL'),
-        code='github_url')])
+    repository_url = forms.URLField(validators=[
+        RegexValidator(regex=r'https://github.com/[^/]+/[^/]+/?$', message=_('Invalid GitHub URL'),
+                       code='github_url')])

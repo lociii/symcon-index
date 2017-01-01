@@ -8,3 +8,4 @@
 venv
 staticfiles
 .env
+celerybeat-schedule

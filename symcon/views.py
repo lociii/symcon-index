@@ -9,7 +9,6 @@ from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
 
 from symcon import forms, models
-from symcon.common.util.symcon import SymconRepository
 
 
 class IndexView(ListView):
@@ -62,25 +61,27 @@ class LibraryView(DetailView):
 
 
 class LibrarySubmitView(FormView):
-    template_name = 'symcon/submit.html'
+    template_name = 'symcon/library/submit.html'
     form_class = forms.SubmitForm
     success_url = reverse_lazy('symcon_index')
 
     def form_valid(self, form):
+        response = super().form_valid(form)
+
         url = form.cleaned_data.get('repository_url')
         matches = re.match(r'https://github.com/([^/]+)/([^/]+)/?', url)
         if not matches:
             messages.error(self.request, _('Could not parse GitHub URL'))
-            return super().form_valid(form)
-
+            return response
         user, name = matches.groups()
-        try:
-            symconrepo = SymconRepository(user=user, name=name)
-            symconrepo.parse()
-            symconrepo.save()
-            messages.success(self.request, _('Library added successfully'))
-        except Exception as e:
-            messages.error(self.request, str(e))
 
-        return super().form_valid(form)
+        # remove .git from name
+        if name.endswith('.git'):
+            name = name.replace('.git', '')
 
+        # issue update task
+        from symcon.tasks import symcon_repository_update
+        symcon_repository_update.apply_async([user, name])
+        messages.success(self.request, _('Thanks! Your submission will be processed soon'))
+
+        return response
