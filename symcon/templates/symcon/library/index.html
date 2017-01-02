@@ -11,6 +11,11 @@
                     {{ item.name }}
                 {% endif %}
             </h1>
+            {% if item.library.librarybranch_set.count > 1 %}
+                <h5>
+                    {% blocktrans with branch=item.branch.name %}Showing version {{ branch }}{% endblocktrans %}
+                </h5>
+            {% endif %}
             <hr>
 
             {% if item.description %}
@@ -30,27 +35,40 @@
             {% include "symcon/_owner_info.html" with repository=item.library.repository %}
             {% include "symcon/_howto_install.html" %}
 
+            <h4>{% trans "Info" %}</h4>
             <ul class="module-details">
-                {% if item.title %}
-                    <li>
-                        {{ item.name }}
-                    </li>
-                {% endif %}
                 {% if item.author %}
                     <li>
                         {% blocktrans with value=item.author %}Developed by <i>{{ value }}</i>{% endblocktrans %}
                     </li>
                 {% endif %}
                 <li>
-                    {% blocktrans with value=item.repository.last_update|date:"SHORT_DATETIME_FORMAT" %}Last updated on {{ value }}{% endblocktrans %}
+                    {% blocktrans with value=item.branch.repository.last_update|date:"SHORT_DATETIME_FORMAT" %}Last updated on {{ value }}{% endblocktrans %}
                 </li>
                 <li>
-                    <a href="{{ item.repository.get_url }}" target="_blank">{{ item.repository.get_url }}</a>
+                    <a href="{{ item.branch.repository.get_url }}" target="_blank">{{ item.branch.repository.get_url }}</a>
                 </li>
                 <li>
-                    <a href="{{ item.repository.get_issue_url }}" target="_blank">{% trans "Issues and proposals" %}</a>
+                    <a href="{{ item.branch.repository.get_issue_url }}" target="_blank">{% trans "Issues and proposals" %}</a>
                 </li>
             </ul>
+
+            {% if item.library.librarybranch_set.count > 1 %}
+                <h4>{% trans "Versions" %}</h4>
+                <ul class="module-details">
+                    {% for librarybranch in item.library.librarybranch_set.all %}
+                        <li>
+                            {% if librarybranch.branch.pk != item.branch.pk %}
+                                <a href="{% url "symcon_library_branch" library_id=item.library.uuid branch=librarybranch.branch.name %}">
+                                    {{ librarybranch.get_min_version }}
+                                </a>
+                            {% else %}
+                                {{ librarybranch.get_min_version }} ({% trans "this version" %})
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
 
             <h4>{% trans "Library" %}</h4>
             <ul class="module-details">
@@ -90,22 +108,36 @@
                         </div>
                     </li>
                 {% endif %}
-                <li>
-                    <div class="row">
-                        <div class="col-md-4">
-                            {% trans "Modules" %}
-                        </div>
-                        <div class="col-md-8">
-                            {% for module in item.module_set.all %}
-                                <a href="{% url "symcon_library_module" library_id=module.library.uuid|lower module_id=module.uuid|lower %}">
-                                    {{ module.name }}
-                                </a>
-                                <br>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </li>
             </ul>
+
+            {% if item.module_set.count > 1 %}
+                <h4>{% trans "Included modules" %}</h4>
+                <ul class="module-details">
+                    {% for module in item.module_set.all %}
+                        <li>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    {{ module.name }}
+                                </div>
+                                <div class="col-md-4">
+                                    {{ module.get_type_display }}
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            {% if item.librarybranchtag_set.count > 1 %}
+                <h4>{% trans "Tags" %}</h4>
+                <ul class="module-tags">
+                    {% for tag in item.librarybranchtag_set.all %}
+                        <li>
+                            <span class="label label-info">{{ tag.name }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

@@ -2,8 +2,10 @@
 import re
 from django.contrib import messages
 from django.http.response import Http404
+from django.shortcuts import get_object_or_404
 from django.urls.base import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
+from django.views.generic.base import RedirectView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
@@ -17,7 +19,7 @@ class IndexView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        queryset = models.Module.objects.last_updated()
+        queryset = models.Library.objects.last_updated()
         if 'search' in self.request.GET:
             queryset = queryset.search(self.request.GET.get('search'))
 
@@ -25,39 +27,38 @@ class IndexView(ListView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx.update(dict(library_count=models.Library.objects.all().count(),
-                        module_count=models.Module.objects.all().count()))
+        ctx.update(dict(library_count=models.Library.objects.all().count()))
         return ctx
 
 
-class LibraryModuleView(DetailView):
-    model = models.Module
-    context_object_name = 'item'
-    template_name = 'symcon/library/module/index.html'
+class LibraryView(RedirectView):
+    permanent = False
 
-    def get_object(self, queryset=None):
-        if queryset is None:
-            queryset = self.get_queryset()
-
-        if 'module_id' not in self.kwargs:
-            raise Http404('Dataset not found')
-
-        return queryset.get(uuid=self.kwargs.get('module_id'))
+    def get_redirect_url(self, *args, **kwargs):
+        library = get_object_or_404(models.Library.objects.all().prefetch_related(
+            'librarybranch_set__branch'), uuid=self.kwargs.get('library_id'))
+        return reverse_lazy('symcon_library_branch', kwargs=dict(
+            library_id=library.uuid, branch=library.get_default_librarybranch().branch.name))
 
 
-class LibraryView(DetailView):
-    model = models.Library
+class LibraryBranchView(DetailView):
+    model = models.LibraryBranch
     context_object_name = 'item'
     template_name = 'symcon/library/index.html'
 
+    def get_queryset(self):
+        return super().get_queryset().prefetch_related(
+            'branch__repository', 'library__repository', 'module_set__modulealias_set',
+            'module_set__moduleparentrequirement_set', 'module_set__modulechildrequirement_set',
+            'module_set__moduleimplementedrequirement_set', 'librarybranchtag_set')
+
     def get_object(self, queryset=None):
-        if queryset is None:
-            queryset = self.get_queryset()
-
-        if 'library_id' not in self.kwargs:
-            raise Http404('Dataset not found')
-
-        return queryset.get(uuid=self.kwargs.get('library_id'))
+        queryset = queryset or self.get_queryset()
+        obj = queryset.filter(library__uuid=self.kwargs.get('library_id'),
+                              branch__name=self.kwargs.get('branch')).first()
+        if not obj:
+            raise Http404('object not found')
+        return obj
 
 
 class LibrarySubmitView(FormView):
@@ -80,8 +81,8 @@ class LibrarySubmitView(FormView):
             name = name.replace('.git', '')
 
         # issue update task
-        from symcon.tasks import symcon_repository_update
-        symcon_repository_update.apply_async([user, name])
+        from symcon.tasks import symcon_update_repository
+        symcon_update_repository.apply_async([user, name])
         messages.success(self.request, _('Thanks! Your submission will be processed soon'))
 
         return response

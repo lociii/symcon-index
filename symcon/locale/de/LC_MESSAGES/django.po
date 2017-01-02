@@ -17,6 +17,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgid "Repository"
+msgstr "Repository"
+
+msgid "Branch"
+msgstr "Branch"
+
 msgid "Library"
 msgstr "Bibliothek"
 
@@ -35,20 +41,29 @@ msgstr "Name"
 msgid "Last update"
 msgstr "Letzte Aktualisierung"
 
-msgid "Repository"
-msgstr "Repository"
-
 msgid "Repositories"
 msgstr "Repositories"
 
+msgid "Default"
+msgstr "Standard"
+
+msgid "Branches"
+msgstr "Branches"
+
 msgid "Identifier"
 msgstr "Bezeichner"
+
+msgid "Libraries"
+msgstr "Bibliotheken"
 
 msgid "Title"
 msgstr "Titel"
 
 msgid "Description"
 msgstr "Beschreibung"
+
+msgid "Minimum Symcon version"
+msgstr "Minimale Symcon version"
 
 msgid "Author"
 msgstr "Autor"
@@ -71,8 +86,17 @@ msgstr "Dokumentation MarkDown"
 msgid "Readme HTML"
 msgstr "Dokumentation HTML"
 
-msgid "Libraries"
-msgstr "Bibliotheken"
+msgid "Library branch"
+msgstr "Bibliotheks-Branch"
+
+msgid "Library branches"
+msgstr "Bibliotheks-Branches"
+
+msgid "Library branch tag"
+msgstr "Bibliotheks-Branch Tag"
+
+msgid "Library branche tags"
+msgstr "Bibliotheks-Branch Tags"
 
 msgid "Core"
 msgstr "Kern"
@@ -147,8 +171,8 @@ msgstr ""
 msgid "%(user)s on GitHub"
 msgstr "%(user)s auf GitHub"
 
-msgid "Symcon module index"
-msgstr "Symcon Modul-Index"
+msgid "Symcon library index"
+msgstr "Symcon Index"
 
 msgid "Toggle navigation"
 msgstr "Navigation ein-/ausblenden"
@@ -208,12 +232,8 @@ msgstr ""
 "gefunden werden."
 
 #, python-format
-msgid "Listing a total of %(modules)s modules in %(libraries)s libraries"
-msgstr ""
-"Der Index enthält insgesamt %(modules)s Module und %(libraries)s Bibliotheken"
-
-msgid "No readme found"
-msgstr "Keine Dokumentation gefunden"
+msgid "Listing a total of %(count)s libraries"
+msgstr "Der Index enthält insgesamt  %(count)s Bibliotheken"
 
 #, python-format
 msgid "Developed by <i>%(value)s</i>"
@@ -223,46 +243,36 @@ msgstr "Entwickelt von <i>%(value)s</i>"
 msgid "Last updated on %(value)s"
 msgstr "Letzte Aktualisierung am %(value)s"
 
+msgid "Included modules:"
+msgstr "Beinhaltete Module:"
+
+msgid "Available versions:"
+msgstr "Verfügbare Versionen:"
+
+#, python-format
+msgid "Showing version %(branch)s"
+msgstr "Zeige Version %(branch)s"
+
+msgid "No readme found"
+msgstr "Keine Dokumentation gefunden"
+
 msgid "Issues and proposals"
 msgstr "Fehler und Vorschläge"
+
+msgid "Versions"
+msgstr "Versionen"
+
+msgid "this version"
+msgstr "diese Version"
 
 msgid "Build number"
 msgstr "Buildnummer"
 
-#, python-format
-msgid "published by <i>%(vendor)s</i> and developed by <i>%(author)s</i>"
-msgstr ""
-"veröffentlicht von <i>%(vendor)s</i> und entwickelt von <i>%(author)s</i>"
+msgid "Included modules"
+msgstr "Beinhaltete Module"
 
-#, python-format
-msgid "published by <i>%(value)s</i>"
-msgstr "veröffentlicht von <i>%(value)s</i>"
-
-#, python-format
-msgid "developed by <i>%(value)s</i>"
-msgstr "entwickelt von <i>%(value)s</i>"
-
-msgid ""
-"Check out the library readme, maybe you get what you're looking for there:"
-msgstr ""
-"Schaue in die Dokumentation der Bibliothek, vielleicht findest Du dort "
-"wonach Du suchst:"
-
-#, python-format
-msgid "Published by <i>%(value)s</i>"
-msgstr "Veröffentlicht von <i>%(value)s</i>"
-
-msgid "Aliases"
-msgstr "Aliase"
-
-msgid "Parent requirements"
-msgstr "Voraussetzungen (Eltern)"
-
-msgid "Child requirements"
-msgstr "Voraussetzungen (Kinder)"
-
-msgid "Implemented requirements"
-msgstr "Voraussetzungen (Implementierung)"
+msgid "Tags"
+msgstr "Tags"
 
 msgid "Submit a new library"
 msgstr "Trage eine neue Bibliothek in den Index ein"

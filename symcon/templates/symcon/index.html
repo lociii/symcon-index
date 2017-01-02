@@ -17,7 +17,7 @@
     <div class="row bottom-buffer">
         <div class="col-md-9">
         {% for item in data %}
-            {% include "symcon/library/module/_summary.html" with show_library_details=1 %}
+            {% include "symcon/library/_summary.html" with show_library_details=1 %}
         {% empty %}
             <div class="alert alert-info">
                 {% trans "No results" %}
@@ -35,7 +35,7 @@
                 </p>
             </div>
             <p>
-                {% blocktrans with modules=module_count libraries=library_count %}Listing a total of {{ modules }} modules in {{ libraries }} libraries{% endblocktrans %}
+                {% blocktrans with count=library_count %}Listing a total of {{ count }} libraries{% endblocktrans %}
             </p>
         </div>
     </div>

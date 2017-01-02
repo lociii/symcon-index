@@ -6,9 +6,9 @@ from bs4 import BeautifulSoup
 
 
 class MarkDownToHtml(object):
-    def __init__(self, text, repository):
+    def __init__(self, text, branch):
         self.text = text
-        self.repository = repository
+        self.branch = branch
         super().__init__()
 
     def transform(self):
@@ -36,6 +36,6 @@ class MarkDownToHtml(object):
             if not bool(urlparse(tag['src']).netloc):
                 if not tag['src'].startswith('/'):
                     tag['src'] = '/' + tag['src']
-                tag['src'] = self.repository.get_raw_url() + tag['src']
+                tag['src'] = self.branch.get_raw_url() + tag['src']
 
         return str(soup)

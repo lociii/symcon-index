@@ -2,7 +2,7 @@
     padding-bottom: 20px !important;
 }
 
-ul.module-details {
+ul.module-details, ul.module-tags {
     list-style-type: none;
     padding-left: 0;
     margin-bottom: 45px;
@@ -11,6 +11,10 @@ ul.module-details {
 ul.module-details > li {
     padding: 5px 0;
     border-bottom: 1px solid #ccc;
+}
+
+ul.module-tags > li {
+    padding: 5px 0;
 }
 
 footer {

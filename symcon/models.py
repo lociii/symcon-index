@@ -22,21 +22,53 @@ class Repository(models.Model):
     def get_owner_url(self):
         return 'https://github.com/{user}'.format(user=self.user)
 
-    def get_raw_url(self, branch='master'):
-        return self.get_url() + '/raw/' + branch
-
     class Meta:
         verbose_name = _('Repository')
         verbose_name_plural = _('Repositories')
         unique_together = ('user', 'name')
 
 
+class Branch(models.Model):
+    repository = models.ForeignKey(to='Repository', verbose_name=_('Repository'))
+    name = models.CharField(max_length=200, verbose_name=_('Branch'))
+    last_update = models.DateTimeField(null=True, blank=True, verbose_name=_('Last update'))
+    default = models.BooleanField(default=False, verbose_name=_('Default'))
+
+    def get_raw_url(self):
+        return self.repository.get_url() + '/raw/' + self.name
+
+    class Meta:
+        verbose_name = _('Branch')
+        verbose_name_plural = _('Branches')
+        unique_together = ('repository', 'name')
+
+
 class Library(models.Model):
-    repository = models.ForeignKey(to=Repository, verbose_name=_('Repository'))
-    uuid = models.UUIDField(verbose_name=_('Identifier'), unique=True)
+    objects = querysets.LibraryQuerySet.as_manager()
+
+    repository = models.ForeignKey(to='Repository', verbose_name=_('Repository'))
+    uuid = models.UUIDField(verbose_name=_('Identifier'))
+
+    def get_default_librarybranch(self):
+        for librarybranch in self.librarybranch_set.all():
+            if librarybranch.branch.default:
+                return librarybranch
+        return None
+
+    class Meta:
+        verbose_name = _('Library')
+        verbose_name_plural = _('Libraries')
+        unique_together = ('repository', 'uuid')
+
+
+class LibraryBranch(models.Model):
+    library = models.ForeignKey(to='Library', verbose_name=_('Library'))
+    branch = models.ForeignKey(to='Branch', verbose_name=_('Branch'))
     name = models.CharField(max_length=200, blank=True, verbose_name=_('Name'))
     title = models.TextField(blank=True, verbose_name=_('Title'))
     description = models.TextField(blank=True, verbose_name=_('Description'))
+    min_version = models.CharField(max_length=200, blank=True,
+                                   verbose_name=_('Minimum Symcon version'))
     author = models.CharField(max_length=200, blank=True, verbose_name=_('Author'))
     url = models.URLField(blank=True, verbose_name=_('URL'))
     version = models.CharField(max_length=50, blank=True, verbose_name=_('Version'))
@@ -51,17 +83,32 @@ class Library(models.Model):
 
     def convert_readme(self):
         self.readme_html = MarkDownToHtml(
-            text=self.readme_markdown, repository=self.repository).transform()
+            text=self.readme_markdown, branch=self.branch).transform()
+
+    def get_min_version(self):
+        if self.min_version:
+            return self.min_version
+        return self.branch.name
 
     class Meta:
-        verbose_name = _('Library')
-        verbose_name_plural = _('Libraries')
-        unique_together = ('repository', 'uuid')
+        verbose_name = _('Library branch')
+        verbose_name_plural = _('Library branches')
+        unique_together = ('library', 'branch')
+        ordering = ('-branch__default', 'name')
+
+
+class LibraryBranchTag(models.Model):
+    librarybranch = models.ForeignKey(to='LibraryBranch', verbose_name=_('Library branch'))
+    name = models.CharField(max_length=200, verbose_name=_('Name'))
+
+    class Meta:
+        verbose_name = _('Library branch tag')
+        verbose_name_plural = _('Library branche tags')
+        unique_together = ('librarybranch', 'name')
+        ordering = ('librarybranch', 'name')
 
 
 class Module(models.Model):
-    objects = querysets.ModuleQuerySet.as_manager()
-
     TYPE_CHOICES = Choices(
         (0, 'core', _('Core')),
         (1, 'io', _('I/O')),
@@ -70,8 +117,8 @@ class Module(models.Model):
         (4, 'configurator', _('Configurator')),
     )
 
-    library = models.ForeignKey(to=Library, verbose_name=_('Library'))
-    uuid = models.UUIDField(verbose_name=_('Identifier'), unique=True)
+    librarybranch = models.ForeignKey(to='LibraryBranch', verbose_name=_('Library branch'))
+    uuid = models.UUIDField(verbose_name=_('Identifier'))
     name = models.CharField(max_length=200, blank=True, verbose_name=_('Name'))
     title = models.TextField(blank=True, verbose_name=_('Title'))
     description = models.TextField(blank=True, verbose_name=_('Description'))
@@ -87,16 +134,16 @@ class Module(models.Model):
 
     def convert_readme(self):
         self.readme_html = MarkDownToHtml(
-            text=self.readme_markdown, repository=self.library.repository).transform()
+            text=self.readme_markdown, branch=self.librarybranch.branch).transform()
 
     class Meta:
         verbose_name = _('Module')
         verbose_name_plural = _('Modules')
-        unique_together = ('library', 'uuid')
+        unique_together = ('librarybranch', 'uuid')
 
 
 class ModuleAlias(models.Model):
-    module = models.ForeignKey(to=Module, verbose_name=_('Module'))
+    module = models.ForeignKey(to='Module', verbose_name=_('Module'))
     name = models.CharField(max_length=200, verbose_name=_('Name'))
     deleted = models.BooleanField(default=False, verbose_name=_('Marked for deletion'))
 
@@ -107,7 +154,7 @@ class ModuleAlias(models.Model):
 
 
 class ModuleParentRequirement(models.Model):
-    module = models.ForeignKey(to=Module, verbose_name=_('Module'))
+    module = models.ForeignKey(to='Module', verbose_name=_('Module'))
     uuid = models.UUIDField(verbose_name=_('Identifier'))
     deleted = models.BooleanField(default=False, verbose_name=_('Marked for deletion'))
 
@@ -118,7 +165,7 @@ class ModuleParentRequirement(models.Model):
 
 
 class ModuleChildRequirement(models.Model):
-    module = models.ForeignKey(to=Module, verbose_name=_('Module'))
+    module = models.ForeignKey(to='Module', verbose_name=_('Module'))
     uuid = models.UUIDField(verbose_name=_('Identifier'))
     deleted = models.BooleanField(default=False, verbose_name=_('Marked for deletion'))
 
@@ -129,7 +176,7 @@ class ModuleChildRequirement(models.Model):
 
 
 class ModuleImplementedRequirement(models.Model):
-    module = models.ForeignKey(to=Module, verbose_name=_('Module'))
+    module = models.ForeignKey(to='Module', verbose_name=_('Module'))
     uuid = models.UUIDField(verbose_name=_('Identifier'))
     deleted = models.BooleanField(default=False, verbose_name=_('Marked for deletion'))
 

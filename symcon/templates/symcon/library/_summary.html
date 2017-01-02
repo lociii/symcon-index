@@ -1,0 +1,49 @@
+{% load i18n %}
+
+{% with item.get_default_librarybranch as default_librarybranch %}
+    {% if default_librarybranch %}
+        <a href="{% url "symcon_library_branch" library_id=item.uuid|lower branch=default_librarybranch.branch.name %}">
+            <h3>
+                {% if default_librarybranch.title %}
+                    {{ default_librarybranch.title }}
+                {% else %}
+                    {{ default_librarybranch.name }}
+                {% endif %}
+            </h3>
+        </a>
+
+        <p>
+            <small>
+                {% if default_librarybranch.author %}
+                    {% blocktrans with value=default_librarybranch.author %}Developed by <i>{{ value }}</i>{% endblocktrans %}<br>
+                {% endif %}
+                {% blocktrans with value=item.repository.last_update|date:"SHORT_DATETIME_FORMAT" %}Last updated on {{ value }}{% endblocktrans %}
+            </small>
+        </p>
+
+        {% if default_librarybranch.description %}
+            <p>
+                {{ default_librarybranch.description|linebreaksbr }}
+            </p>
+        {% endif %}
+        {% if default_librarybranch.module_set.count > 1 %}
+            <p>
+                {% trans "Included modules:" %}
+                {% for module in default_librarybranch.module_set.all %}
+                    {% if module.title %}{{ module.title }}{% else %}{{ module.name }}{% endif %}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </p>
+        {% endif %}
+        {% if item.librarybranch_set.count > 1 %}
+            {% trans "Available versions:" %}
+            {% for librarybranch in item.librarybranch_set.all %}
+                <a href="{% url "symcon_library_branch" library_id=item.uuid|lower branch=librarybranch.branch.name %}">{{ librarybranch.get_min_version }}</a>{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        {% endif %}
+        <hr>
+    {% endif %}
+{% endwith %}
+
+
+
+

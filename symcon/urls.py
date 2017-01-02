@@ -9,6 +9,6 @@ urlpatterns = [
     url(r'^library/submit$', views.LibrarySubmitView.as_view(),
         name='symcon_library_submit'),
     url(r'^library/(?P<library_id>[^/]+)$', views.LibraryView.as_view(), name='symcon_library'),
-    url(r'^library/(?P<library_id>[^/]+)/module/(?P<module_id>[^/]+)$',
-        views.LibraryModuleView.as_view(), name='symcon_library_module'),
+    url(r'^library/(?P<library_id>[^/]+)/branch/(?P<branch>[^/]+)$',
+        views.LibraryBranchView.as_view(), name='symcon_library_branch'),
 ]

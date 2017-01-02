@@ -28,27 +28,52 @@ class SymconRepositoryHandler(object):
         return self._client
 
     def update_repository(self, user, name):
-        # get the database model
-        repository, created = models.Repository.objects.get_or_create(user=user, name=name)
-
         # get repository from github
         try:
             repo = self.client.get_repo('{user}/{name}'.format(user=user, name=name), lazy=False)
         except UnknownObjectException:
             # repository wasn't found on github, let's delete it
-            repository.delete()
+            models.Repository.objects.filter(user=user, name=name).delete()
             return
         except GithubException as e:
             logger.exception(e)
             return
 
-        # set last commit date
-        repository.last_update = pytz.utc.localize(repo.pushed_at)
-        repository.save(update_fields=['last_update'])
+        # get the database model
+        repository, created = models.Repository.objects.update_or_create(
+            user=user, name=name, defaults=dict(last_update=pytz.utc.localize(repo.pushed_at)))
 
-        # get repo contents
+        # get all branches
         try:
-            contents = repo.get_contents('/')
+            branches = repo.get_branches()
+        except GithubException as e:
+            logger.exception(e)
+            return
+
+        # index every branch
+        for branch_data in branches:
+            default = branch_data.name == repo.default_branch
+            branch, created = models.Branch.objects.update_or_create(
+                repository=repository, name=branch_data.name, defaults=dict(default=default))
+            tasks.symcon_update_branch.apply_async([branch.pk])
+
+    def update_branch(self, branch_id):
+        # load branch
+        branch = models.Branch.objects.filter(pk=branch_id).prefetch_related('repository').first()
+        if not branch:
+            return
+
+        # get repository
+        try:
+            repo = self.client.get_repo('{user}/{name}'.format(
+                user=branch.repository.user, name=branch.repository.name), lazy=False)
+        except GithubException as e:
+            logger.exception(e)
+            return
+
+        # get branch contents
+        try:
+            contents = repo.get_contents('/', ref=branch.name)
         except GithubException as e:
             logger.exception(e)
             return
@@ -93,36 +118,51 @@ class SymconRepositoryHandler(object):
         # build defaults to update values
         defaults = dict()
         for attribute in ['author', 'name', 'title', 'description', 'url', 'version', 'build',
-                          'date']:
+                          'date', 'min_version']:
             if attribute in definition:
                 defaults[attribute] = definition[attribute]
         if readme:
             defaults['readme_markdown'] = readme
 
+        # get library
+        library, created = models.Library.objects.get_or_create(
+            repository=branch.repository, uuid=definition['id'])
+
         # create or update library
-        library, created = models.Library.objects.update_or_create(
-            repository=repository, uuid=definition['id'], defaults=defaults)
+        librarybranch, created = models.LibraryBranch.objects.update_or_create(
+            library=library, branch=branch, defaults=defaults)
+
+        # save tags
+        if 'tags' in definition:
+            tags = definition['tags'].split(',')
+            for tag in tags:
+                models.LibraryBranchTag.objects.update_or_create(librarybranch=librarybranch,
+                                                                 name=tag.strip())
 
         # issue task for each subdirectory to check for modules
         for modulepath in modulepaths:
-            tasks.symcon_repository_subdirectory.apply_async([user, name, library.pk, modulepath])
+            tasks.symcon_update_librarybranch_module.apply_async([librarybranch.pk, modulepath])
 
-    def update_repository_module(self, user, name, library_id, path):
+    def update_librarybranch_module(self, librarybranch_id, modulepath):
         # load library
-        library = models.Library.objects.filter(pk=library_id).first()
-        if not library:
+        librarybranch = models.LibraryBranch.objects.filter(pk=librarybranch_id).prefetch_related(
+            'branch__repository', 'library').first()
+        if not librarybranch:
             return
 
         # get repository
         try:
-            repo = self.client.get_repo('{user}/{name}'.format(user=user, name=name), lazy=False)
+            repo = self.client.get_repo('{user}/{name}'.format(
+                user=librarybranch.branch.repository.user,
+                name=librarybranch.branch.repository.name), lazy=False)
         except GithubException as e:
             logger.exception(e)
             return
 
         # get repository contents in subdirectory
         try:
-            contents = repo.get_contents('/{dir}'.format(dir=quote(path)))
+            contents = repo.get_contents('/{dir}'.format(
+                dir=quote(modulepath)), ref=librarybranch.branch.name)
         except GithubException as e:
             logger.exception(e)
             return
@@ -131,10 +171,10 @@ class SymconRepositoryHandler(object):
         definition = None
         readme = None
         for item in contents:
-            if item.type == 'file' and item.path == '{path}/module.json'.format(path=path):
+            if item.type == 'file' and item.path == '{path}/module.json'.format(path=modulepath):
                 definition = item.decoded_content.decode('UTF-8')
             elif item.type == 'file' and item.path.lower() == '{path}/readme.md'.format(
-                    path=path.lower()):
+                    path=modulepath.lower()):
                 readme = item.decoded_content.decode('UTF-8')
 
         # no module.json found
@@ -167,7 +207,7 @@ class SymconRepositoryHandler(object):
 
         # create or update module
         module, created = models.Module.objects.get_or_create(
-            library=library, uuid=definition['id'], defaults=defaults)
+            librarybranch=librarybranch, uuid=definition['id'], defaults=defaults)
 
         # add module aliases
         if 'aliases' in definition:
