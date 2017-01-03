@@ -16,6 +16,8 @@ env = environ.Env(
     GITHUB_API_USER=(str, ''),
     GITHUB_API_TOKEN=(str, ''),
     REDIS_URL=(str, 'redis://'),
+    RECAPTCHA_PUBLIC_KEY=(str, ''),
+    RECAPTCHA_PRIVATE_KEY=(str, ''),
 )
 environ.Env.read_env(env_file=os.path.join(BASE_DIR, '.env'))
 
@@ -47,6 +49,7 @@ INSTALLED_APPS = [
     'bootstrap_pagination',
     'django_celery_results',
     'django_celery_beat',
+    'captcha',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -212,3 +215,7 @@ GITHUB_API_USER = env('GITHUB_API_USER')
 GITHUB_API_TOKEN = env('GITHUB_API_TOKEN')
 
 FORMAT_MODULE_PATH = '%s.formats' % SITE_NAME
+
+RECAPTCHA_PUBLIC_KEY = env('RECAPTCHA_PUBLIC_KEY')
+RECAPTCHA_PRIVATE_KEY = env('RECAPTCHA_PRIVATE_KEY')
+NOCAPTCHA = True

@@ -290,6 +290,9 @@ msgstr "Repository-URL"
 msgid "e.g. https://github.com/lociii/locisymcon"
 msgstr "z.B. https://github.com/lociii/locisymcon"
 
+msgid "Please complete the captcha"
+msgstr "Bitte löse das Captcha"
+
 msgid "Submit"
 msgstr "Eintragen"
 

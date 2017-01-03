@@ -60,10 +60,10 @@
                         <li>
                             {% if librarybranch.branch.pk != item.branch.pk %}
                                 <a href="{% url "symcon_library_branch" library_id=item.library.uuid branch=librarybranch.branch.name %}">
-                                    {{ librarybranch.get_min_version }}
+                                    {{ librarybranch.get_req_ips_version }}
                                 </a>
                             {% else %}
-                                {{ librarybranch.get_min_version }} ({% trans "this version" %})
+                                {{ librarybranch.get_req_ips_version }} ({% trans "this version" %})
                             {% endif %}
                         </li>
                     {% endfor %}

@@ -37,7 +37,7 @@
         {% if item.librarybranch_set.count > 1 %}
             {% trans "Available versions:" %}
             {% for librarybranch in item.librarybranch_set.all %}
-                <a href="{% url "symcon_library_branch" library_id=item.uuid|lower branch=librarybranch.branch.name %}">{{ librarybranch.get_min_version }}</a>{% if not forloop.last %}, {% endif %}
+                <a href="{% url "symcon_library_branch" library_id=item.uuid|lower branch=librarybranch.branch.name %}">{{ librarybranch.get_req_ips_version }}</a>{% if not forloop.last %}, {% endif %}
             {% endfor %}
         {% endif %}
         <hr>

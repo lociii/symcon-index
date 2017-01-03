@@ -24,6 +24,16 @@
                                 </span>
                             {% endif %}
                         </div>
+                        <div class="form-group {% if form.captcha.errors %}has-error{% endif %}"">
+                            {{ form.captcha }}
+                            {% if form.captcha.errors %}
+                                <span class="help-block">
+                                    {% for error in form.captcha.errors %}
+                                        <p>{% trans "Please complete the captcha" %}</p>
+                                    {% endfor %}
+                                </span>
+                            {% endif %}
+                        </div>
                         <button type="submit" class="btn btn-default">{% trans "Submit" %}</button>
                     </form>
                 </div>

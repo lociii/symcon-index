@@ -85,9 +85,9 @@ class LibraryBranch(models.Model):
         self.readme_html = MarkDownToHtml(
             text=self.readme_markdown, branch=self.branch).transform()
 
-    def get_min_version(self):
-        if self.min_version:
-            return self.min_version
+    def get_req_ips_version(self):
+        if self.req_ips_version:
+            return self.req_ips_version
         return self.branch.name
 
     class Meta:
