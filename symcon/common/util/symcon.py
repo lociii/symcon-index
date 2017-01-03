@@ -118,7 +118,7 @@ class SymconRepositoryHandler(object):
         # build defaults to update values
         defaults = dict()
         for attribute in ['author', 'name', 'title', 'description', 'url', 'version', 'build',
-                          'date', 'min_version']:
+                          'date', 'req_ips_version']:
             if attribute in definition:
                 defaults[attribute] = definition[attribute]
         if readme:
@@ -134,10 +134,9 @@ class SymconRepositoryHandler(object):
 
         # save tags
         if 'tags' in definition:
-            tags = definition['tags'].split(',')
-            for tag in tags:
-                models.LibraryBranchTag.objects.update_or_create(librarybranch=librarybranch,
-                                                                 name=tag.strip())
+            for tag in definition['tags']:
+                models.LibraryBranchTag.objects.update_or_create(
+                    librarybranch=librarybranch, name=str(tag).strip())
 
         # issue task for each subdirectory to check for modules
         for modulepath in modulepaths:

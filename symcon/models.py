@@ -67,8 +67,8 @@ class LibraryBranch(models.Model):
     name = models.CharField(max_length=200, blank=True, verbose_name=_('Name'))
     title = models.TextField(blank=True, verbose_name=_('Title'))
     description = models.TextField(blank=True, verbose_name=_('Description'))
-    min_version = models.CharField(max_length=200, blank=True,
-                                   verbose_name=_('Minimum Symcon version'))
+    req_ips_version = models.CharField(max_length=200, blank=True,
+                                       verbose_name=_('Minimum Symcon version'))
     author = models.CharField(max_length=200, blank=True, verbose_name=_('Author'))
     url = models.URLField(blank=True, verbose_name=_('URL'))
     version = models.CharField(max_length=50, blank=True, verbose_name=_('Version'))
