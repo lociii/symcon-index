@@ -84,6 +84,18 @@
                         </div>
                     </li>
                 {% endif %}
+                {% if item.library.librarybranch_set.count == 1 %}
+                    <li>
+                        <div class="row">
+                            <div class="col-md-4">
+                                {% trans "Required Symcon version" %}
+                            </div>
+                            <div class="col-md-8">
+                                {{ item.get_req_ips_version }}
+                            </div>
+                        </div>
+                    </li>
+                {% endif %}
                 {% if item.build %}
                     <li>
                         <div class="row">
@@ -131,11 +143,11 @@
             {% if item.librarybranchtag_set.count > 1 %}
                 <h4>{% trans "Tags" %}</h4>
                 <ul class="module-tags">
-                    {% for tag in item.librarybranchtag_set.all %}
-                        <li>
+                    <li>
+                        {% for tag in item.librarybranchtag_set.all %}
                             <span class="label label-info">{{ tag.name }}</span>
-                        </li>
-                    {% endfor %}
+                        {% endfor %}
+                    </li>
                 </ul>
             {% endif %}
         </div>

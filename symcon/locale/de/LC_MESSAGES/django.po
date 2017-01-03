@@ -265,6 +265,9 @@ msgstr "Versionen"
 msgid "this version"
 msgstr "diese Version"
 
+msgid "Required Symcon version"
+msgstr "Ab Symcon-Version"
+
 msgid "Build number"
 msgstr "Buildnummer"
 
