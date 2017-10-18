@@ -1,8 +1,12 @@
+UNMAINTAINED
+============
+This project is not maintained anymore. Feel free to fork and use it.
+No support nor development will be done!
+
 About
 =====
 
 A library and module index for IP-Symcon
-Test it at https://symcon-index.herokuapp.com/
 
 Contribute
 ==========
